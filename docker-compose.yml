@@ -10,12 +10,16 @@ services:
 
   db:
     image: postgres:13
+    container_name: postgres-db
     environment:
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
       - pgdata:/var/lib/postgresql/data
+      - ./postgresql.conf:/etc/postgresql/postgresql.conf # カスタム設定ファイルをマウント
+      - ./init-db.sh:/docker-entrypoint-initdb.d/init-db.sh # 初期化スクリプトをマウント
+    command: ["-c", "config_file=/etc/postgresql/postgresql.conf"] # カスタム設定ファイルを読み込む
 
 volumes:
   pgdata:
